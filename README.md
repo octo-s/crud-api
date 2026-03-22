@@ -61,3 +61,8 @@ curl -X PUT http://localhost:4000/api/products/{id} \
 ```bash
 curl -X DELETE http://localhost:4000/api/products/{id}
 ```
+
+## Start multiple instances of application
+```bash
+npm run start:multi
+```
