@@ -28,7 +28,7 @@ export function validateProductBody(body: unknown): { valid: boolean; error?: st
     return { valid: false, error: 'Category is required' };
   }
 
-  if (!product.inStock) {
+  if (typeof product.inStock !== 'boolean') {
     return { valid: false, error: 'inStock is required' };
   }
 
