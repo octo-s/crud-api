@@ -9,7 +9,7 @@ class InMemoryDatabase {
 
   getById(id: string): Product | undefined {
     return this.products.get(id);
-  }src
+  }
 
   create(product: Product): Product {
     this.products.set(product.id, product);
