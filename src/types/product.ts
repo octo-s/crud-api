@@ -6,6 +6,3 @@ export interface Product {
   category: string;
   inStock: boolean;
 }
-
-export type CreateProductDto = Omit<Product, 'id'>;
-export type UpdateProductDto = Partial<CreateProductDto>;

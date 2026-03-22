@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { db } from '../db/inMemoryDb.js';
-import { Product, CreateProductDto, UpdateProductDto } from '../types/product.js';
+import { Product } from '../types/product.js';
+import {CreateProductDto, UpdateProductDto} from "../schemas/productSchema.js";
 
 export function getAllProducts(): Product[] {
   return db.getAll();

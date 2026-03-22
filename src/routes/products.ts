@@ -7,7 +7,7 @@ import {
   deleteProduct,
 } from '../services/productService.js';
 import { isValidUuid, validateProductBody } from '../utils/validation.js';
-import { CreateProductDto } from '../types/product.js';
+import {createProductSchema} from "../schemas/productSchema.js";
 
 interface ProductParams {
   productId: string;
@@ -37,13 +37,13 @@ export async function productRoutes(fastify: FastifyInstance) {
   });
 
   fastify.post('/', async (request: FastifyRequest, reply: FastifyReply) => {
-    const { valid, error } = validateProductBody(request.body);
+    const  productValidation = validateProductBody(createProductSchema, request.body);
 
-    if (!valid) {
-      return reply.code(400).send({ message: error });
+    if (!productValidation.valid) {
+      return reply.code(400).send({ message: productValidation.error });
     }
 
-    const product = createProduct(request.body as CreateProductDto);
+    const product = createProduct(productValidation.data);
 
     return reply.code(201).send(product);
   });
@@ -61,13 +61,13 @@ export async function productRoutes(fastify: FastifyInstance) {
       return reply.code(404).send({ message: 'Product not found' });
     }
 
-    const validation = validateProductBody(request.body);
+    const validation = validateProductBody(createProductSchema, request.body);
 
     if (!validation.valid) {
       return reply.code(400).send({ message: validation.error });
     }
 
-    const updated = updateProduct(productId, request.body as CreateProductDto);
+    const updated = updateProduct(productId, validation.data);
     return reply.code(200).send(updated);
   });
 

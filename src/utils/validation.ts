@@ -1,36 +1,18 @@
 import { validate as uuidValidate } from 'uuid';
-import { CreateProductDto } from '../types/product.js';
+import { z } from 'zod';
 
 export function isValidUuid(id: string): boolean {
   return uuidValidate(id);
 }
 
-export function validateProductBody(body: unknown): { valid: boolean; error?: string } {
-  if (!body || typeof body !== 'object') {
-    return { valid: false, error: 'Request body is required' };
+export function validateProductBody<T>(schema: z.ZodType<T>, body: unknown): { valid: true; data: T } | { valid: false; error: string } {
+  try {
+    const data = schema.parse(body);
+    return { valid: true, data };
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return { valid: false, error: err.issues[0]?.message || 'Validation failed' };
+    }
+    return { valid: false, error: 'Validation failed' };
   }
-
-  const product = body as CreateProductDto;
-
-  if (!product.name) {
-    return { valid: false, error: 'Name is required' };
-  }
-
-  if (!product.description) {
-    return { valid: false, error: 'Description is required' };
-  }
-
-  if (!product.price || product.price <= 0) {
-    return { valid: false, error: 'Price is required and must be a positive number' };
-  }
-
-  if (!product.category) {
-    return { valid: false, error: 'Category is required' };
-  }
-
-  if (typeof product.inStock !== 'boolean') {
-    return { valid: false, error: 'inStock is required' };
-  }
-
-  return { valid: true };
 }
